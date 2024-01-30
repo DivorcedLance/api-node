@@ -10,12 +10,8 @@ app.use(bodyParser.json());
 // Ruta POST en / para recibir texto
 app.post('/', (req, res) => {
   console.log('-------------------');
-  const textoRecibido = req.body.texto;
-  console.log('Texto recibido:', textoRecibido);
-  const distancia = req.body.distancia;
-  console.log('Distancia:', distancia);
-  const angulo = req.body.angulo;
-  console.log('Angulo:', angulo);
+  const textoRecibido = req.body.reportes;
+  console.log('Reportes:', textoRecibido);
   console.log('-------------------');
   res.send('Datos recibidos');
 });
