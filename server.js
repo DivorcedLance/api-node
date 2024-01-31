@@ -71,7 +71,7 @@ app.post('/', async (req, res) => {
 
 // Agrega una nueva ruta GET en / para obtener todos los valores de la tabla
 app.get('/reportes', async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
+  // res.setHeader('Access-Control-Allow-Origin', '*')
   try {
     const datos = await getAllReports()
     res.json(datos)
@@ -82,7 +82,7 @@ app.get('/reportes', async (req, res) => {
 });
 
 app.get('/reportes/:numero', async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
+  // res.setHeader('Access-Control-Allow-Origin', '*')
   try {
     let numero = req.params.numero; // Obtén el parámetro de la ruta
     numero = parseInt(numero, 10);
