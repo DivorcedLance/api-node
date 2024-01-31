@@ -7,6 +7,7 @@ const { createClient } = require('@libsql/client')
 dotenv.config()
 
 const app = express()
+app.use(express.static("public"));
 const port = process.env.PORT || 3000
 
 const db = createClient({
@@ -35,7 +36,7 @@ const db = createClient({
 app.use(bodyParser.json())
 
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, '/static/index.html'));
+res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Ruta POST en / para recibir texto
