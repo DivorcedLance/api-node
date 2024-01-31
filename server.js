@@ -33,6 +33,10 @@ const db = createClient({
 // Middleware para parsear el cuerpo de las solicitudes como JSON
 app.use(bodyParser.json())
 
+app.get('/', function(req, res) {
+  res.sendFile(path.join('./static', '/index.html'));
+});
+
 // Ruta POST en / para recibir texto
 app.post('/', async (req, res) => {
   const reportes = req.body.reportes
