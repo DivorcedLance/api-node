@@ -2,3 +2,4 @@ node_modules/
 example/
 mock/
 server copy.js
+local.js
