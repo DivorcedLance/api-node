@@ -35,7 +35,7 @@ const db = createClient({
 app.use(bodyParser.json())
 
 app.get('/', function(req, res) {
-  res.sendFile(path.join('./static', '/index.html'));
+  res.sendFile(path.join(__dirname, '/static/index.html'));
 });
 
 // Ruta POST en / para recibir texto
