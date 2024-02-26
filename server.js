@@ -45,19 +45,19 @@ app.post('/', async (req, res) => {
   const reportes = req.body.reportes
 
   reportes.forEach(async (reporte) => {
-    let inputADC = paresInt(reporte.inputADC)
-    let filteredInputADC = paresInt(reporte.filteredInputADC)
-    let state = paresInt(reporte.state)
+    let inputADC = parseInt(reporte.inputADC)
+    let filteredInputADC = parseInt(reporte.filteredInputADC)
+    let state = parseInt(reporte.state)
     let tiempo = convertirHoraStringADate(reporte.tiempo)
 
-    // Insertar datos en la base de datos
-    try {
-      await storeData(inputADC, filteredInputADC, state, tiempo)
-    } catch (error) {
-      console.error('Error al insertar en la base de datos:', error)
-      res.status(500).send('Error al procesar la solicitud')
-      return
-    }
+    // // Insertar datos en la base de datos
+    // try {
+    //   await storeData(inputADC, filteredInputADC, state, tiempo)
+    // } catch (error) {
+    //   console.error('Error al insertar en la base de datos:', error)
+    //   res.status(500).send('Error al procesar la solicitud')
+    //   return
+    // }
 
     console.log(
       'Tiempo:',
