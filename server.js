@@ -53,14 +53,14 @@ app.post('/', async (req, res) => {
     let state = parseInt(reporte.state)
     let formattedTime = convertirHoraStringADate(reporte.formattedTime)
 
-    // // Insertar datos en la base de datos
-    // try {
-    //   await storeData(inputADC, filteredInputADC, state, tiempo)
-    // } catch (error) {
-    //   console.error('Error al insertar en la base de datos:', error)
-    //   res.status(500).send('Error al procesar la solicitud')
-    //   return
-    // }
+    // Insertar datos en la base de datos
+    try {
+      await storeData(inputADC, filteredInputADC, state, tiempo)
+    } catch (error) {
+      console.error('Error al insertar en la base de datos:', error)
+      res.status(500).send('Error al procesar la solicitud')
+      return
+    }
 
     console.log(
       'Tiempo:',
