@@ -106,7 +106,7 @@ app.get('/reportes/:numero', async (req, res) => {
 
 app.delete('/reportes', async (req, res) => {
   try {
-    await db.execute('DELETE FROM ADCReportes')
+    await db.execute('DROP TABLE ADCReportes')
     res.send('Datos eliminados')
   } catch (error) {
     console.error('Error al eliminar datos de la base de datos:', error)
