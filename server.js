@@ -18,10 +18,11 @@ const db = createClient({
 (async () => {
   try {
     await db.execute(`
-    CREATE TABLE IF NOT EXISTS reportes (
+    CREATE TABLE IF NOT EXISTS ADCReportes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      distancia FLOAT,
-      angulo FLOAT,
+      inputADC INT,
+      filteredInputADC INT,
+      state INT,
       tiempo TEXT
     )
     `)
@@ -44,13 +45,14 @@ app.post('/', async (req, res) => {
   const reportes = req.body.reportes
 
   reportes.forEach(async (reporte) => {
-    let distancia = parseFloat(reporte.distancia)
-    let angulo = parseFloat(reporte.angulo)
+    let inputADC = paresInt(reporte.inputADC)
+    let filteredInputADC = paresInt(reporte.filteredInputADC)
+    let state = paresInt(reporte.state)
     let tiempo = convertirHoraStringADate(reporte.tiempo)
 
     // Insertar datos en la base de datos
     try {
-      await storeData(distancia, angulo, tiempo)
+      await storeData(inputADC, filteredInputADC, state, tiempo)
     } catch (error) {
       console.error('Error al insertar en la base de datos:', error)
       res.status(500).send('Error al procesar la solicitud')
@@ -58,12 +60,14 @@ app.post('/', async (req, res) => {
     }
 
     console.log(
-      tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
-      'Angulo:',
-      angulo,
       'Tiempo:',
-      'Distancia:',
-      distancia
+      tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+      'inputADC:',
+      inputADC,
+      'filteredInputADC:',
+      filteredInputADC,
+      'state:',
+      state
     )
   })
 
@@ -99,7 +103,7 @@ app.get('/reportes/:numero', async (req, res) => {
 // Inicia el servidor
 app.listen(port, () => {
   console.log(
-    `Servidor Express en ejecución en https://esparking.onrender.com:${port}`
+    `Servidor Express en ejecución en https://node-api-ge59.onrender.com:${port}`
   )
 })
 
@@ -121,13 +125,14 @@ function convertirHoraStringADate(horaString) {
 }
 
 // Función mejorada para almacenar datos en la base de datos
-async function storeData(distancia, angulo, tiempo) {
+async function storeData(inputADC, filteredInputADC, state, tiempo) {
   try {
     await db.execute({
-      sql: 'INSERT INTO reportes (distancia, angulo, tiempo) VALUES (?, ?, ?)',
+      sql: 'INSERT INTO ADCReportes (inputADC, filteredInputADC, state, tiempo) VALUES (?, ?, ?, ?)',
       args: [
-        distancia,
-        angulo,
+        inputADC,
+        filteredInputADC,
+        state,
         tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
       ],
     })
@@ -138,7 +143,7 @@ async function storeData(distancia, angulo, tiempo) {
 
 async function getAllReports() {
   try {
-    const response = await db.execute('SELECT * FROM reportes')
+    const response = await db.execute('SELECT * FROM ADCReportes')
     return response.rows
   } catch (error) {
     throw error
@@ -148,7 +153,7 @@ async function getAllReports() {
 async function getReports(number) {
   try {
     const response = await db.execute({
-      sql: 'SELECT * FROM reportes ORDER BY id DESC LIMIT ?',
+      sql: 'SELECT * FROM ADCReportes ORDER BY id DESC LIMIT ?',
       args: [number],
     })
     console.log(response.rows)
