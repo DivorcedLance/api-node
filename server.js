@@ -51,7 +51,7 @@ app.post('/', async (req, res) => {
     let inputADC = parseInt(reporte.inputADC)
     let filteredInputADC = parseInt(reporte.filteredInputADC)
     let state = parseInt(reporte.state)
-    let tiempo = convertirHoraStringADate(reporte.formattedTime)
+    let formattedTime = convertirHoraStringADate(reporte.formattedTime)
 
     // // Insertar datos en la base de datos
     // try {
