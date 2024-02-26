@@ -42,6 +42,8 @@ res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 // Ruta POST en / para recibir texto
 app.post('/', async (req, res) => {
+
+  console.log("Recibiendo datos")
   const reportes = req.body.reportes
 
   reportes.forEach(async (reporte) => {
@@ -80,6 +82,7 @@ app.get('/reportes', async (req, res) => {
   // res.setHeader('Access-Control-Allow-Origin', '*')
   try {
     const datos = await getAllReports()
+    console.log("Enviando todos los datos")
     res.json(datos)
   } catch (error) {
     console.error('Error al obtener datos de la base de datos:', error);
