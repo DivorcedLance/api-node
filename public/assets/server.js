@@ -18,11 +18,10 @@ const db = createClient({
 (async () => {
   try {
     await db.execute(`
-    CREATE TABLE IF NOT EXISTS ADCReportes (
+    CREATE TABLE IF NOT EXISTS reportes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      inputADC INTEGER,
-      filteredInputADC INTEGER,
-      state INTEGER,
+      distancia FLOAT,
+      angulo FLOAT,
       tiempo TEXT
     )
     `)
@@ -42,46 +41,29 @@ res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 // Ruta POST en / para recibir texto
 app.post('/', async (req, res) => {
-
-  console.log("Recibiendo datos")
   const reportes = req.body.reportes
-  console.log(reportes)
-
-  console.log(
-    'Tiempo:',
-    tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
-    'inputADC:',
-    inputADC,
-    'filteredInputADC:',
-    filteredInputADC,
-    'state:',
-    state
-  )
 
   reportes.forEach(async (reporte) => {
-    let inputADC = parseInt(reporte.inputADC)
-    let filteredInputADC = parseInt(reporte.filteredInputADC)
-    let state = parseInt(reporte.state)
+    let distancia = parseFloat(reporte.distancia)
+    let angulo = parseFloat(reporte.angulo)
     let tiempo = convertirHoraStringADate(reporte.tiempo)
 
-    // // Insertar datos en la base de datos
-    // try {
-    //   await storeData(inputADC, filteredInputADC, state, tiempo)
-    // } catch (error) {
-    //   console.error('Error al insertar en la base de datos:', error)
-    //   res.status(500).send('Error al procesar la solicitud')
-    //   return
-    // }
+    // Insertar datos en la base de datos
+    try {
+      await storeData(distancia, angulo, tiempo)
+    } catch (error) {
+      console.error('Error al insertar en la base de datos:', error)
+      res.status(500).send('Error al procesar la solicitud')
+      return
+    }
 
     console.log(
-      'Tiempo:',
       tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
-      'inputADC:',
-      inputADC,
-      'filteredInputADC:',
-      filteredInputADC,
-      'state:',
-      state
+      'Angulo:',
+      angulo,
+      'Tiempo:',
+      'Distancia:',
+      distancia
     )
   })
 
@@ -94,7 +76,6 @@ app.get('/reportes', async (req, res) => {
   // res.setHeader('Access-Control-Allow-Origin', '*')
   try {
     const datos = await getAllReports()
-    console.log("Enviando todos los datos")
     res.json(datos)
   } catch (error) {
     console.error('Error al obtener datos de la base de datos:', error);
@@ -118,7 +99,7 @@ app.get('/reportes/:numero', async (req, res) => {
 // Inicia el servidor
 app.listen(port, () => {
   console.log(
-    `Servidor Express en ejecución en https://node-api-ge59.onrender.com:${port}`
+    `Servidor Express en ejecución en https://esparking.onrender.com:${port}`
   )
 })
 
@@ -140,14 +121,13 @@ function convertirHoraStringADate(horaString) {
 }
 
 // Función mejorada para almacenar datos en la base de datos
-async function storeData(inputADC, filteredInputADC, state, tiempo) {
+async function storeData(distancia, angulo, tiempo) {
   try {
     await db.execute({
-      sql: 'INSERT INTO ADCReportes (inputADC, filteredInputADC, state, tiempo) VALUES (?, ?, ?, ?)',
+      sql: 'INSERT INTO reportes (distancia, angulo, tiempo) VALUES (?, ?, ?)',
       args: [
-        inputADC,
-        filteredInputADC,
-        state,
+        distancia,
+        angulo,
         tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
       ],
     })
@@ -158,7 +138,7 @@ async function storeData(inputADC, filteredInputADC, state, tiempo) {
 
 async function getAllReports() {
   try {
-    const response = await db.execute('SELECT * FROM ADCReportes')
+    const response = await db.execute('SELECT * FROM reportes')
     return response.rows
   } catch (error) {
     throw error
@@ -168,7 +148,7 @@ async function getAllReports() {
 async function getReports(number) {
   try {
     const response = await db.execute({
-      sql: 'SELECT * FROM ADCReportes ORDER BY id DESC LIMIT ?',
+      sql: 'SELECT * FROM reportes ORDER BY id DESC LIMIT ?',
       args: [number],
     })
     console.log(response.rows)
