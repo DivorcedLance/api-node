@@ -23,7 +23,7 @@ const db = createClient({
       inputADC INTEGER,
       filteredInputADC INTEGER,
       state INTEGER,
-      tiempo TEXT
+      formattedTime TEXT
     )
     `)
 
@@ -47,22 +47,11 @@ app.post('/', async (req, res) => {
   const reportes = req.body.reportes
   console.log(reportes)
 
-  console.log(
-    'Tiempo:',
-    reportes.tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
-    'inputADC:',
-    reportes.inputADC,
-    'filteredInputADC:',
-    reportes.filteredInputADC,
-    'state:',
-    reportes.state
-  )
-
   reportes.forEach(async (reporte) => {
     let inputADC = parseInt(reporte.inputADC)
     let filteredInputADC = parseInt(reporte.filteredInputADC)
     let state = parseInt(reporte.state)
-    let tiempo = convertirHoraStringADate(reporte.tiempo)
+    let tiempo = convertirHoraStringADate(reporte.formattedTime)
 
     // // Insertar datos en la base de datos
     // try {
@@ -75,7 +64,7 @@ app.post('/', async (req, res) => {
 
     console.log(
       'Tiempo:',
-      tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+      formattedTime.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
       'inputADC:',
       inputADC,
       'filteredInputADC:',
