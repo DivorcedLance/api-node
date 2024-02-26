@@ -55,7 +55,7 @@ app.post('/', async (req, res) => {
 
     // Insertar datos en la base de datos
     try {
-      await storeData(inputADC, filteredInputADC, state, tiempo)
+      await storeData(inputADC, filteredInputADC, state, formattedTime)
     } catch (error) {
       console.error('Error al insertar en la base de datos:', error)
       res.status(500).send('Error al procesar la solicitud')
@@ -63,7 +63,7 @@ app.post('/', async (req, res) => {
     }
 
     console.log(
-      'Tiempo:',
+      'formattedTime:',
       formattedTime.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
       'inputADC:',
       inputADC,
@@ -129,15 +129,15 @@ function convertirHoraStringADate(horaString) {
 }
 
 // Función mejorada para almacenar datos en la base de datos
-async function storeData(inputADC, filteredInputADC, state, tiempo) {
+async function storeData(inputADC, filteredInputADC, state, formattedTime) {
   try {
     await db.execute({
-      sql: 'INSERT INTO ADCReportes (inputADC, filteredInputADC, state, tiempo) VALUES (?, ?, ?, ?)',
+      sql: 'INSERT INTO ADCReportes (inputADC, filteredInputADC, state, formattedTime) VALUES (?, ?, ?, ?)',
       args: [
         inputADC,
         filteredInputADC,
         state,
-        tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+        formattedTime.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
       ],
     })
   } catch (error) {
