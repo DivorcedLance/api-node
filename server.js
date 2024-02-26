@@ -49,13 +49,13 @@ app.post('/', async (req, res) => {
 
   console.log(
     'Tiempo:',
-    tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+    reportes.tiempo.toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
     'inputADC:',
-    inputADC,
+    reportes.inputADC,
     'filteredInputADC:',
-    filteredInputADC,
+    reportes.filteredInputADC,
     'state:',
-    state
+    reportes.state
   )
 
   reportes.forEach(async (reporte) => {
